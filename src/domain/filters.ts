@@ -2,8 +2,7 @@ import { z } from 'zod';
 import { CentsSchema } from './money.ts';
 import type { Property } from './property.ts';
 
-export const FILTER_DIMENSIONS = ['bedrooms', 'price'] as const;
-export type FilterDimension = (typeof FILTER_DIMENSIONS)[number];
+export type FilterDimension = 'bedrooms' | 'price';
 
 export const AVAILABILITY_SCOPES = ['available', 'all'] as const;
 
