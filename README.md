@@ -3,6 +3,8 @@
 A filterable catalogue of rental units. 50 apartments parsed from CSV at startup,
 filtered server-side by bedrooms and price, rendered as a card grid.
 
+![The catalogue: 37 available rentals, the availability switch and the Filtros button](screenshots/catalogue.png)
+
 ## Running it
 
 ```
