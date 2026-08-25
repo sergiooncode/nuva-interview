@@ -1,0 +1,7 @@
+id,title,brand,neighborhood,status,bedrooms,bathrooms,max_occupancy,size_m2,monthly_rent,currency,floor_type,is_exterior,age_label
+apt_001,estudio práctico cerca del metro,Yaya STAY,Vallecas,available,0,1,1,34,760,EUR,2ª planta,true,+1 año
+apt_002,piso con dormitorios ilegibles,Yaya STAY,Usera,available,dos,1,3,66,1180,EUR,1ª planta,false,+1 año
+apt_003,apartamento elegante en zona prime,Yaya FLEX,Salamanca,available,1,1,2,55,1950,EUR,3ª planta,false,-1 año
+apt_004,fila incompleta
+apt_005,piso facturado en dólares,Yaya STAY,Retiro,available,2,1,3,70,1650,USD,4ª planta,true,+1 año
+apt_006,ático amplio con vistas,Yaya FLEX,Chamartín,reserved,4,3,5,146,5120,EUR,ático,true,-1 año
