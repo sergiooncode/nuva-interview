@@ -85,8 +85,10 @@ Not tested: Tailwind classes, type definitions, third-party behaviour, and the
 2. **The remaining dimensions** — bathrooms, size, neighborhood, brand. The domain is
    shaped for it: add a field to `FilterStateSchema`, a predicate, an `except` branch,
    a query param, a control. `.claude/skills/add-filter-dimension` documents the six steps.
-3. **Card imagery.** Every card renders the same placeholder from `public/property.png`;
-   the CSV has no image column. Cards fall back to a gradient when it's absent.
+3. **Per-property imagery.** Every card renders the same photograph from
+   `public/property.jpg` because the CSV has no image column; cards fall back to a
+   gradient if it is absent. That placeholder is also a watermarked stock comp, so it
+   needs replacing with licensed art before this goes anywhere public.
 4. **Restore filter state from the URL.** The query encoding already supports it —
    `?bedrooms=2,3&minPrice=800` is a complete filter specification — but the frontend
    does not read it on load, so links are not yet shareable.

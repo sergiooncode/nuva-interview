@@ -4,7 +4,7 @@ import type { Property, PropertyStatus } from '../domain/property.ts';
 import { AreaIcon, BathIcon, BedIcon } from './icons.tsx';
 
 /** One shared photograph until the catalogue carries its own image column. */
-const PROPERTY_IMAGE = '/property.png';
+const PROPERTY_IMAGE = '/property.jpg';
 
 const BRAND_TONE: Record<string, string | undefined> = {
   'Yaya STAY': 'text-yaya-orange',
@@ -35,12 +35,17 @@ const Badge = ({ children, className = '' }: BadgeProps) => (
   </span>
 );
 
+/** Scale to fit the box rather than filling it, so no export is stretched. */
+const SPEC_ICON = 'max-h-full max-w-full object-contain';
+
 type SpecProps = { icon: React.ReactNode; value: string };
 
 const Spec = ({ icon, value }: SpecProps) => (
-  <div className="flex flex-1 flex-col items-center gap-1.5">
-    {/* The exports carry their own colour, so no text-* class applies here. */}
-    <span className="flex h-5 items-center">{icon}</span>
+  <div className="flex flex-1 flex-col items-center gap-2">
+    {/* The three exports are 29×15, 27×24 and 25×26. An identical box plus
+        object-contain gives them one optical size instead of three, and the
+        exports carry their own colour, so no text-* class applies here. */}
+    <span className="flex h-6 w-7 items-center justify-center">{icon}</span>
     <span className="text-sm font-medium text-slate-700">{value}</span>
   </div>
 );
@@ -98,11 +103,9 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         </p>
 
         <div className="mt-auto flex divide-x divide-slate-200 border-y border-slate-100 py-3">
-          {/* Height-constrained, width auto: the exports have three different
-              aspect ratios and size-* would squash them. */}
-          <Spec icon={<BedIcon className="h-5 w-auto" />} value={String(property.bedrooms)} />
-          <Spec icon={<BathIcon className="h-5 w-auto" />} value={String(property.bathrooms)} />
-          <Spec icon={<AreaIcon className="h-5 w-auto" />} value={String(property.sizeM2)} />
+          <Spec icon={<BedIcon className={SPEC_ICON} />} value={String(property.bedrooms)} />
+          <Spec icon={<BathIcon className={SPEC_ICON} />} value={String(property.bathrooms)} />
+          <Spec icon={<AreaIcon className={SPEC_ICON} />} value={String(property.sizeM2)} />
         </div>
 
         <button
