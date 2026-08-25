@@ -7,7 +7,7 @@ import {
   type FilterState,
 } from '../domain/filters.ts';
 import { fetchProperties } from './api.ts';
-import { FilterDrawer } from './FilterDrawer.tsx';
+import { FilterModal } from './FilterModal.tsx';
 import { PropertyCard } from './PropertyCard.tsx';
 import { Toolbar } from './Toolbar.tsx';
 
@@ -23,7 +23,7 @@ const isCoherent = (filters: FilterState): boolean =>
   FilterStateSchema.safeParse(filters).success;
 
 export const App = () => {
-  // pending is what the drawer has staged; applied is what the results reflect.
+  // pending is what the modal has staged; applied is what the results reflect.
   const [pending, setPending] = useState<FilterState>(DEFAULT_FILTER_STATE);
   const [applied, setApplied] = useState<FilterState>(DEFAULT_FILTER_STATE);
   const [data, setData] = useState<SearchResponse | null>(null);
@@ -55,7 +55,7 @@ export const App = () => {
   };
 
   /**
-   * The scope switch lives outside the filter drawer, so it commits on the spot
+   * The scope switch lives outside the filter modal, so it commits on the spot
    * instead of waiting for Apply — still from a handler, never from an effect.
    */
   const changeAvailability = (availability: AvailabilityScope) => {
@@ -110,7 +110,7 @@ export const App = () => {
       </main>
 
       {filtersOpen && data !== null && (
-        <FilterDrawer
+        <FilterModal
           facets={data.facets}
           pending={pending}
           applyDisabled={sameFilters(pending, applied) || !isCoherent(pending)}

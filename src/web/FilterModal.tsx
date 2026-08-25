@@ -5,7 +5,7 @@ import { BedroomFilter } from './BedroomFilter.tsx';
 import { CloseIcon } from './icons.tsx';
 import { PriceFilter } from './PriceFilter.tsx';
 
-type FilterDrawerProps = {
+type FilterModalProps = {
   facets: Facets;
   pending: FilterState;
   applyDisabled: boolean;
@@ -18,7 +18,7 @@ type FilterDrawerProps = {
 const toggleValue = (values: readonly number[], value: number): number[] =>
   values.includes(value) ? values.filter((each) => each !== value) : [...values, value];
 
-export const FilterDrawer = ({
+export const FilterModal = ({
   facets,
   pending,
   applyDisabled,
@@ -26,7 +26,7 @@ export const FilterDrawer = ({
   onApply,
   onReset,
   onClose,
-}: FilterDrawerProps) => {
+}: FilterModalProps) => {
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
@@ -38,18 +38,20 @@ export const FilterDrawer = ({
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-slate-900/30"
+        className="absolute inset-0 bg-slate-900/40"
         onClick={onClose}
         aria-hidden="true"
       />
 
+      {/* max-h keeps a long filter list scrolling inside the panel rather than
+          pushing Apply off the bottom of the viewport. */}
       <aside
         role="dialog"
         aria-modal="true"
         aria-label="Filtros"
-        className="relative flex h-full w-full max-w-sm flex-col bg-white shadow-xl"
+        className="relative flex max-h-[85vh] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
       >
         <header className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
           <h2 className="text-base font-semibold text-slate-900">Filtros</h2>

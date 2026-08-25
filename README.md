@@ -36,7 +36,7 @@ harder to read than a one-liner; `facets.test.ts` exists mostly to hold this in 
 own counts. It isn't, because it must constrain the results *and every facet count*
 identically — if it scoped only the results, a bedroom option could read "5" and return
 nothing. So `except` never lifts it, and it returns no counts of its own. The cost is
-an asymmetry: one control in the toolbar behaves unlike the ones in the drawer, which is
+an asymmetry: one control in the toolbar behaves unlike the ones in the modal, which is
 also why it applies immediately rather than waiting for Apply.
 
 **Money is a branded `Cents` type; nothing else is branded.** Plain numbers throughout
@@ -94,5 +94,6 @@ Not tested: Tailwind classes, type definitions, third-party behaviour, and the
    does not read it on load, so links are not yet shareable.
 5. **Re-export the icons at 2× or as SVG.** The three card icons and the wordmark are
    1× PNGs (24–29 px) and are soft on retina; PNGs also can't take colour from the
-   design tokens. The bed icon's container in particular needs adjusting — its 29×15
-   aspect ratio sits awkwardly in a row built for squarer icons.
+   design tokens. Their layout is settled — each sits in an identical box and scales to
+   fit, so the differing aspect ratios no longer read as three different sizes — but no
+   amount of CSS makes a 1× asset sharp.

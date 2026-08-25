@@ -40,7 +40,7 @@ const response = (results: unknown[], total: number) => ({
     }),
 });
 
-test('renders the grid, filters via the drawer and toggles the scope', async () => {
+test('renders the grid, filters via the modal and toggles the scope', async () => {
   const fetchMock = vi
     .fn()
     .mockResolvedValue(response([unit('a', 'estudio uno', 0)], 1))
