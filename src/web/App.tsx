@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { SearchResponse } from '../api/contract.ts';
 import {
   DEFAULT_FILTER_STATE,
+  FilterStateSchema,
   type AvailabilityScope,
   type FilterState,
 } from '../domain/filters.ts';
@@ -12,8 +13,14 @@ import { Toolbar } from './Toolbar.tsx';
 
 const sameFilters = (a: FilterState, b: FilterState): boolean =>
   a.availability === b.availability &&
+  a.price.min === b.price.min &&
+  a.price.max === b.price.max &&
   a.bedrooms.length === b.bedrooms.length &&
   a.bedrooms.every((value) => b.bedrooms.includes(value));
+
+/** The schema's own refinement decides validity, so the rule lives in one place. */
+const isCoherent = (filters: FilterState): boolean =>
+  FilterStateSchema.safeParse(filters).success;
 
 export const App = () => {
   // pending is what the drawer has staged; applied is what the results reflect.
@@ -106,7 +113,7 @@ export const App = () => {
         <FilterDrawer
           facets={data.facets}
           pending={pending}
-          applyDisabled={sameFilters(pending, applied)}
+          applyDisabled={sameFilters(pending, applied) || !isCoherent(pending)}
           onPendingChange={setPending}
           onApply={apply}
           onReset={reset}

@@ -58,3 +58,60 @@ describe('GET /api/properties', () => {
     expect(response.json<{ field: string }>().field).toContain('bedrooms');
   });
 });
+
+describe('GET /api/properties — price', () => {
+  it('filters by an inclusive euro range and reports it back in cents', async () => {
+    const response = await server().inject({
+      method: 'GET',
+      url: '/api/properties?minPrice=1180&maxPrice=1260',
+    });
+
+    expect(response.statusCode).toBe(200);
+    const body = SearchResponseSchema.parse(response.json());
+    expect(body.results.map((property) => property.id)).toEqual(['fx_03', 'fx_04']);
+    expect(body.results[0].monthlyRent).toBe(118000);
+  });
+
+  it('accepts a lower bound with no upper bound', async () => {
+    const response = await server().inject({
+      method: 'GET',
+      url: '/api/properties?minPrice=2000',
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json<{ total: number }>().total).toBe(1);
+  });
+
+  it('ANDs the price range with the bedroom dimension', async () => {
+    const response = await server().inject({
+      method: 'GET',
+      url: '/api/properties?bedrooms=1,2&minPrice=1250',
+    });
+
+    const body = SearchResponseSchema.parse(response.json());
+    expect(body.results.map((property) => property.id)).toEqual(['fx_04', 'fx_05']);
+    // Each dimension's facet still ignores its own selection, so both stay full.
+    expect(body.facets.bedrooms).toHaveLength(5);
+    expect(body.facets.price).toHaveLength(7);
+  });
+
+  it('rejects a price that is not a whole number of euros', async () => {
+    const response = await server().inject({
+      method: 'GET',
+      url: '/api/properties?minPrice=1180.50',
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json<{ field: string }>().field).toBe('minPrice');
+  });
+
+  it('rejects a minimum above the maximum', async () => {
+    const response = await server().inject({
+      method: 'GET',
+      url: '/api/properties?minPrice=2000&maxPrice=1000',
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json<{ field: string }>().field).toBe('minPrice');
+  });
+});

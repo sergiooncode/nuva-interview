@@ -3,6 +3,7 @@ import type { Facets } from '../domain/facets.ts';
 import type { FilterState } from '../domain/filters.ts';
 import { BedroomFilter } from './BedroomFilter.tsx';
 import { CloseIcon } from './icons.tsx';
+import { PriceFilter } from './PriceFilter.tsx';
 
 type FilterDrawerProps = {
   facets: Facets;
@@ -62,7 +63,15 @@ export const FilterDrawer = ({
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto px-5 py-5">
+        <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-5 py-5">
+          <PriceFilter
+            buckets={facets.price}
+            range={pending.price}
+            onChange={(price) => {
+              onPendingChange({ ...pending, price });
+            }}
+          />
+
           <BedroomFilter
             options={facets.bedrooms}
             selected={pending.bedrooms}

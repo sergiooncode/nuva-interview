@@ -14,6 +14,9 @@ export const CentsSchema = z
   .nonnegative()
   .transform((value) => value as Cents);
 
+/** For values already in cents — bucket edges and the like — rather than euros. */
+export const cents = (value: number): Cents => CentsSchema.parse(value);
+
 export const centsFromEuros = (euros: number): Cents => {
   if (!Number.isFinite(euros)) {
     throw new DomainError(`Rent is not a finite number: ${String(euros)}`);

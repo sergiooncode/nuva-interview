@@ -6,6 +6,12 @@ const toQueryString = (filters: FilterState): string => {
   if (filters.bedrooms.length > 0) {
     params.set('bedrooms', filters.bedrooms.join(','));
   }
+  if (filters.price.min !== null) {
+    params.set('minPrice', String(Math.round(filters.price.min / 100)));
+  }
+  if (filters.price.max !== null) {
+    params.set('maxPrice', String(Math.round(filters.price.max / 100)));
+  }
   if (filters.availability !== DEFAULT_FILTER_STATE.availability) {
     params.set('availability', filters.availability);
   }
