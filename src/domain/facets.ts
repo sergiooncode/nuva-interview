@@ -1,9 +1,18 @@
+import { z } from 'zod';
 import { applyFilters, type FilterState } from './filters.ts';
 import type { Property } from './property.ts';
 
-export type FacetOption = { value: number; count: number };
+export const FacetOptionSchema = z.object({
+  value: z.number().int().nonnegative(),
+  count: z.number().int().nonnegative(),
+});
 
-export type Facets = { bedrooms: FacetOption[] };
+export const FacetsSchema = z.object({
+  bedrooms: z.array(FacetOptionSchema),
+});
+
+export type FacetOption = z.infer<typeof FacetOptionSchema>;
+export type Facets = z.infer<typeof FacetsSchema>;
 
 /**
  * The option universe comes from the whole catalogue, not the filtered set, so an

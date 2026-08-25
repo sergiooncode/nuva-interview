@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { DomainError } from './errors.ts';
 
 /**
@@ -5,6 +6,13 @@ import { DomainError } from './errors.ts';
  * expected a compile error rather than a hundredfold undercharge.
  */
 export type Cents = number & { readonly __brand: unique symbol };
+
+/** The one place the brand is applied, so no other module needs a cast. */
+export const CentsSchema = z
+  .number()
+  .int()
+  .nonnegative()
+  .transform((value) => value as Cents);
 
 export const centsFromEuros = (euros: number): Cents => {
   if (!Number.isFinite(euros)) {

@@ -1,6 +1,6 @@
 import { parse } from 'csv-parse/sync';
 import { z } from 'zod';
-import { PropertySchema, type Property } from './property.ts';
+import { PropertyCsvRowSchema, type Property } from './property.ts';
 
 export type RejectedRow = { row: number; reason: string };
 
@@ -37,7 +37,7 @@ export const parseCatalogue = (csv: string): Catalogue => {
 
   for (const { record, info } of records) {
     try {
-      properties.push(PropertySchema.parse(record));
+      properties.push(PropertyCsvRowSchema.parse(record));
     } catch (error) {
       rejected.push({ row: info.lines, reason: describe(error) });
     }
