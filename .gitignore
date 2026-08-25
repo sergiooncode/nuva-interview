@@ -1,3 +1,9 @@
 node_modules
 dist
 .DS_Store
+
+# .claude/ is tracked, but this file holds machine-local permission choices
+.claude/settings.local.json
+
+# vitest --coverage
+coverage
