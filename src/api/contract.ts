@@ -1,6 +1,10 @@
 import { z } from 'zod';
 import { FacetsSchema } from '../domain/facets.ts';
-import { DEFAULT_FILTER_STATE, type FilterState } from '../domain/filters.ts';
+import {
+  AVAILABILITY_SCOPES,
+  DEFAULT_FILTER_STATE,
+  type FilterState,
+} from '../domain/filters.ts';
 import { PropertySchema } from '../domain/property.ts';
 
 const commaSeparatedWholeNumbers = (field: string) =>
@@ -17,11 +21,13 @@ const commaSeparatedWholeNumbers = (field: string) =>
 export const SearchQuerySchema = z
   .strictObject({
     bedrooms: commaSeparatedWholeNumbers('bedrooms').optional(),
+    availability: z.enum(AVAILABILITY_SCOPES).optional(),
   })
   .transform(
     (query): FilterState => ({
       ...DEFAULT_FILTER_STATE,
       ...(query.bedrooms === undefined ? {} : { bedrooms: query.bedrooms }),
+      ...(query.availability === undefined ? {} : { availability: query.availability }),
     }),
   );
 

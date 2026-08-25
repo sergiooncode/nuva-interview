@@ -46,6 +46,30 @@ describe('computeFacets', () => {
     });
   });
 
+  it('counts the reserved and rented units once the scope is widened', () => {
+    const facets = computeFacets(FIXTURE_PROPERTIES, {
+      ...DEFAULT_FILTER_STATE,
+      availability: 'all',
+    });
+
+    expect(facets.bedrooms).toEqual([
+      { value: 0, count: 2 },
+      { value: 1, count: 2 },
+      { value: 2, count: 2 },
+      { value: 3, count: 1 },
+      { value: 4, count: 1 },
+    ]);
+  });
+
+  it('keeps the availability scope applied to the dimension it excludes', () => {
+    const facets = computeFacets(FIXTURE_PROPERTIES, withBedrooms([3]));
+
+    expect(facets.bedrooms.find((option) => option.value === 3)).toEqual({
+      value: 3,
+      count: 0,
+    });
+  });
+
   it('excludes reserved and rented units from the counts', () => {
     const facets = computeFacets(FIXTURE_PROPERTIES, DEFAULT_FILTER_STATE);
     const total = facets.bedrooms.reduce((sum, option) => sum + option.count, 0);
