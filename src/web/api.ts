@@ -1,10 +1,13 @@
 import { SearchResponseSchema, type SearchResponse } from '../api/contract.ts';
-import type { FilterState } from '../domain/filters.ts';
+import { DEFAULT_FILTER_STATE, type FilterState } from '../domain/filters.ts';
 
 const toQueryString = (filters: FilterState): string => {
   const params = new URLSearchParams();
   if (filters.bedrooms.length > 0) {
     params.set('bedrooms', filters.bedrooms.join(','));
+  }
+  if (filters.availability !== DEFAULT_FILTER_STATE.availability) {
+    params.set('availability', filters.availability);
   }
   return params.toString();
 };
