@@ -16,14 +16,17 @@ export const Toolbar = ({
 }: ToolbarProps) => {
   const showingUnavailable = availability === 'all';
 
+  // Equal 1fr columns either side keep the controls centred on the page rather than
+  // on whatever is left over after the heading, whose width changes with the result
+  // count. Below md the two stack instead.
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4">
+    <div className="flex flex-col gap-4 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center">
       <h2 className="text-xl font-semibold text-slate-900">
         {total === 1 ? '1 alquiler' : `${String(total)} alquileres`}{' '}
         <span className="font-normal text-slate-400">en Madrid</span>
       </h2>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-center gap-4">
         {/* A label cannot label a button, so the switch points at the text by id. */}
         <div className="flex items-center gap-2.5 text-sm text-slate-600">
           <span id="availability-switch-label">Mostrar no disponibles</span>
