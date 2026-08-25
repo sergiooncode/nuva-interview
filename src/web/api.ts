@@ -1,0 +1,20 @@
+import { SearchResponseSchema, type SearchResponse } from '../api/contract.ts';
+import type { FilterState } from '../domain/filters.ts';
+
+const toQueryString = (filters: FilterState): string => {
+  const params = new URLSearchParams();
+  if (filters.bedrooms.length > 0) {
+    params.set('bedrooms', filters.bedrooms.join(','));
+  }
+  return params.toString();
+};
+
+export const fetchProperties = async (filters: FilterState): Promise<SearchResponse> => {
+  const query = toQueryString(filters);
+  const response = await fetch(`/api/properties${query === '' ? '' : `?${query}`}`);
+  if (!response.ok) {
+    throw new Error(`La búsqueda ha fallado (${String(response.status)})`);
+  }
+  const body: unknown = await response.json();
+  return SearchResponseSchema.parse(body);
+};
