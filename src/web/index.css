@@ -1,1 +1,10 @@
 @import 'tailwindcss';
+
+/* Figma tokens. Named here once so no hex is repeated in a component. */
+@theme {
+  --font-sans: 'Albert Sans', ui-sans-serif, system-ui, sans-serif;
+
+  --color-yaya-orange: #f08335;
+  --color-yaya-mint: #53d3c8;
+  --color-yaya-green: #39dd91;
+}

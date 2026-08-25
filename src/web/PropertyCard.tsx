@@ -7,13 +7,13 @@ import { AreaIcon, BathIcon, BedIcon } from './icons.tsx';
 const PROPERTY_IMAGE = '/property.png';
 
 const BRAND_TONE: Record<string, string | undefined> = {
-  'Yaya STAY': 'text-orange-500',
-  'Yaya FLEX': 'text-teal-500',
+  'Yaya STAY': 'text-yaya-orange',
+  'Yaya FLEX': 'text-yaya-mint',
 };
 
 const AGE_TONE: Record<string, string | undefined> = {
-  '+1 año': 'bg-orange-500 text-white',
-  '-1 año': 'bg-teal-400 text-white',
+  '+1 año': 'bg-yaya-orange text-white',
+  '-1 año': 'bg-yaya-mint text-white',
 };
 
 const STATUS_LABEL: Record<PropertyStatus, string> = {
@@ -39,7 +39,8 @@ type SpecProps = { icon: React.ReactNode; value: string };
 
 const Spec = ({ icon, value }: SpecProps) => (
   <div className="flex flex-1 flex-col items-center gap-1.5">
-    <span className="text-slate-400">{icon}</span>
+    {/* The exports carry their own colour, so no text-* class applies here. */}
+    <span className="flex h-5 items-center">{icon}</span>
     <span className="text-sm font-medium text-slate-700">{value}</span>
   </div>
 );
@@ -70,7 +71,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           </Badge>
 
           <Badge className={isAvailable ? 'bg-white text-slate-800' : 'bg-white/85 text-slate-400'}>
-            {isAvailable && <span className="size-1.5 rounded-full bg-green-500" />}
+            {isAvailable && <span className="size-1.5 rounded-full bg-yaya-green" />}
             {STATUS_LABEL[property.status]}
           </Badge>
 
@@ -97,9 +98,11 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         </p>
 
         <div className="mt-auto flex divide-x divide-slate-200 border-y border-slate-100 py-3">
-          <Spec icon={<BedIcon className="size-5" />} value={String(property.bedrooms)} />
-          <Spec icon={<BathIcon className="size-5" />} value={String(property.bathrooms)} />
-          <Spec icon={<AreaIcon className="size-5" />} value={String(property.sizeM2)} />
+          {/* Height-constrained, width auto: the exports have three different
+              aspect ratios and size-* would squash them. */}
+          <Spec icon={<BedIcon className="h-5 w-auto" />} value={String(property.bedrooms)} />
+          <Spec icon={<BathIcon className="h-5 w-auto" />} value={String(property.bathrooms)} />
+          <Spec icon={<AreaIcon className="h-5 w-auto" />} value={String(property.sizeM2)} />
         </div>
 
         <button

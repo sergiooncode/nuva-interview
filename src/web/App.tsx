@@ -62,7 +62,9 @@ export const App = () => {
     <div className="min-h-screen bg-slate-100">
       <header className="bg-white">
         <div className="mx-auto max-w-[1600px] px-6 py-4">
-          <h1 className="text-lg font-bold tracking-tight text-slate-900">Yaya House</h1>
+          <h1>
+            <img src="/yaya-house.png" alt="Yaya House" className="h-6 w-auto" />
+          </h1>
         </div>
       </header>
 
