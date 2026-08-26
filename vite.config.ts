@@ -9,8 +9,10 @@ export default defineConfig({
   build: { outDir: '../../dist', emptyOutDir: true },
   plugins: [react(), tailwindcss()],
   server: {
-    // The frontend calls /api/... and never knows about ports.
-    proxy: { '/api': 'http://localhost:3000' },
+    // The frontend calls /api/... and never knows about ports. Anchored with a
+    // trailing slash: a bare '/api' prefix also swallows sibling modules such as
+    // src/web/api.ts, which the app root serves at /api.ts.
+    proxy: { '^/api/': 'http://localhost:3000' },
   },
   test: {
     // Tests live outside the app root, so they resolve from the repo root instead.
