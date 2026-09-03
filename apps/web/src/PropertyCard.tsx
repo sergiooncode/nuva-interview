@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { formatCents } from '../domain/money.ts';
-import type { Property, PropertyStatus } from '../domain/property.ts';
+import { formatCents } from '@yaya/contracts/money.ts';
+import type { Property, PropertyStatus } from '@yaya/contracts/property.ts';
 import { AreaIcon, BathIcon, BedIcon } from './icons.tsx';
 
 /** One shared photograph until the catalogue carries its own image column. */

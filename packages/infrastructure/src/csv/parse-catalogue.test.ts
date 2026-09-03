@@ -1,13 +1,13 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { parseCatalogue } from './csv.ts';
+import { parseCatalogue } from './parse-catalogue.ts';
 
 /**
  * Six data rows on lines 2–7. Three are valid; three are malformed in a different
  * way each — an unparseable bedroom count, a short row, and a foreign currency.
  */
 const CATALOGUE = readFileSync(
-  new URL('./__fixtures__/catalogue.csv', import.meta.url),
+  new URL('./catalogue.fixture.csv', import.meta.url),
   'utf8',
 );
 

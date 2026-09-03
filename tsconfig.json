@@ -14,7 +14,14 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": ["node"],
+    // Explicit, so a typecheck does not depend on workspace symlinks being installed.
+    "paths": {
+      "@yaya/domain/*": ["./packages/domain/src/*"],
+      "@yaya/contracts/*": ["./packages/contracts/src/*"],
+      "@yaya/application/*": ["./packages/application/src/*"],
+      "@yaya/infrastructure/*": ["./packages/infrastructure/src/*"]
+    }
   },
-  "include": ["src", "vite.config.ts", "eslint.config.js"]
+  "include": ["apps", "packages", "vitest.config.ts", "eslint.config.js"]
 }

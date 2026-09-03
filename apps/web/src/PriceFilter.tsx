@@ -1,6 +1,6 @@
-import type { PriceBucket } from '../domain/facets.ts';
-import type { PriceRange } from '../domain/filters.ts';
-import { centsFromEuros, formatCents, type Cents } from '../domain/money.ts';
+import type { PriceBucket } from '@yaya/contracts/facets.ts';
+import type { PriceRange } from '@yaya/contracts/filters.ts';
+import { centsFromEuros, formatCents, type Cents } from '@yaya/contracts/money.ts';
 
 const toEuroInput = (value: Cents | null): string =>
   value === null ? '' : String(Math.round(value / 100));

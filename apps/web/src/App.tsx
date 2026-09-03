@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import type { SearchResponse } from '../api/contract.ts';
+import type { SearchResponse } from '@yaya/contracts/search.ts';
 import {
   DEFAULT_FILTER_STATE,
   FilterStateSchema,
   type AvailabilityScope,
   type FilterState,
-} from '../domain/filters.ts';
+} from '@yaya/contracts/filters.ts';
 import { fetchProperties } from './api.ts';
 import { FilterModal } from './FilterModal.tsx';
 import { PropertyCard } from './PropertyCard.tsx';

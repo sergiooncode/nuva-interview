@@ -1,5 +1,5 @@
-import { SearchResponseSchema, type SearchResponse } from '../api/contract.ts';
-import { DEFAULT_FILTER_STATE, type FilterState } from '../domain/filters.ts';
+import { SearchResponseSchema, type SearchResponse } from '@yaya/contracts/search.ts';
+import { DEFAULT_FILTER_STATE, type FilterState } from '@yaya/contracts/filters.ts';
 
 const toQueryString = (filters: FilterState): string => {
   const params = new URLSearchParams();

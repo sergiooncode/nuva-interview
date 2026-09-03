@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { FacetsSchema } from '../domain/facets.ts';
+import { FacetsSchema } from '@yaya/domain/facets.ts';
 import {
   AVAILABILITY_SCOPES,
   DEFAULT_FILTER_STATE,
   type FilterState,
-} from '../domain/filters.ts';
-import { centsFromEuros } from '../domain/money.ts';
-import { PropertySchema } from '../domain/property.ts';
+} from '@yaya/domain/filters.ts';
+import { centsFromEuros } from '@yaya/domain/money.ts';
+import { PropertySchema } from '@yaya/domain/property.ts';
 
 const commaSeparatedWholeNumbers = (field: string) =>
   z

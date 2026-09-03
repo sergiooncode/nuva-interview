@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { FIXTURE_PROPERTIES } from '../domain/__fixtures__/properties.ts';
-import { SearchResponseSchema } from './contract.ts';
+import { FIXTURE_PROPERTIES } from '@yaya/domain/__fixtures__/properties.ts';
+import { SearchResponseSchema } from '@yaya/contracts/search.ts';
 import { buildServer } from './server.ts';
 
 const server = () =>

@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { parseCatalogue } from '../domain/csv.ts';
+import { parseCatalogue } from '@yaya/infrastructure/csv/parse-catalogue.ts';
 import { buildServer } from './server.ts';
 
 const CSV_PATH = new URL('../../data/sre-ai-coding-test-data.csv', import.meta.url);

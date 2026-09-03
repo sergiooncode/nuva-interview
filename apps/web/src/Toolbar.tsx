@@ -1,4 +1,4 @@
-import type { AvailabilityScope } from '../domain/filters.ts';
+import type { AvailabilityScope } from '@yaya/contracts/filters.ts';
 import { SlidersIcon } from './icons.tsx';
 
 type ToolbarProps = {

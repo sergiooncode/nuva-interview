@@ -1,0 +1,8 @@
+{
+  "name": "@yaya/infrastructure",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { "./*": "./src/*" },
+  "dependencies": { "zod": "^4.4.3", "pg": "^8.16.3", "csv-parse": "^7.0.2", "@yaya/domain": "*", "@yaya/application": "*" }
+}

@@ -1,28 +1,29 @@
 {
-  "name": "listing-app",
+  "name": "yaya-house",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "concurrently -k -n api,web \"npm:dev:api\" \"npm:dev:web\"",
-    "dev:api": "node --watch src/api/main.ts",
-    "dev:web": "vite",
-    "build": "vite build",
+    "dev:api": "npm run dev -w @yaya/api",
+    "dev:web": "npm run dev -w @yaya/web",
+    "build": "npm run build -w @yaya/web",
     "test": "vitest",
+    "test:run": "vitest run",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint ."
-  },
-  "dependencies": {
-    "csv-parse": "^7.0.2",
-    "fastify": "^5.12.1",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "zod": "^4.4.3"
+    "lint": "eslint .",
+    "migrate": "node --env-file-if-exists=.env packages/infrastructure/src/postgres/migrate.ts",
+    "seed": "node --env-file-if-exists=.env packages/infrastructure/src/csv/seed-postgres.ts"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^26.2.0",
+    "@types/pg": "^8.15.6",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "@vitejs/plugin-react": "^6.1.0",

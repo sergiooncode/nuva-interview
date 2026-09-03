@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import type { Facets } from '../domain/facets.ts';
-import type { FilterState } from '../domain/filters.ts';
+import type { Facets } from '@yaya/contracts/facets.ts';
+import type { FilterState } from '@yaya/contracts/filters.ts';
 import { BedroomFilter } from './BedroomFilter.tsx';
 import { CloseIcon } from './icons.tsx';
 import { PriceFilter } from './PriceFilter.tsx';

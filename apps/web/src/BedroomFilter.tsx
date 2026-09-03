@@ -1,4 +1,4 @@
-import type { FacetOption } from '../domain/facets.ts';
+import type { FacetOption } from '@yaya/contracts/facets.ts';
 
 const bedroomLabel = (value: number): string => {
   if (value === 0) return 'Estudio';

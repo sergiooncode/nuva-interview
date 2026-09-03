@@ -1,6 +1,6 @@
 import { parse } from 'csv-parse/sync';
 import { z } from 'zod';
-import { PropertyCsvRowSchema, type Property } from './property.ts';
+import { PropertyCsvRowSchema, type Property } from '@yaya/domain/property.ts';
 
 export type RejectedRow = { row: number; reason: string };
 

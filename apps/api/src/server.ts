@@ -1,9 +1,9 @@
 import Fastify, { type FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import type { Catalogue } from '../domain/csv.ts';
-import { computeFacets } from '../domain/facets.ts';
-import { applyFilters } from '../domain/filters.ts';
-import { SearchQuerySchema, type SearchResponse } from './contract.ts';
+import type { Catalogue } from '@yaya/infrastructure/csv/parse-catalogue.ts';
+import { computeFacets } from '@yaya/domain/facets.ts';
+import { applyFilters } from '@yaya/domain/filters.ts';
+import { SearchQuerySchema, type SearchResponse } from '@yaya/contracts/search.ts';
 
 const offendingField = (error: z.ZodError): string => {
   for (const issue of error.issues) {
