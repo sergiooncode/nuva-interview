@@ -9,3 +9,6 @@ dist
 coverage
 
 .env
+
+# Private working notes, never shipped with the repo
+docs/architecture-audit.md
