@@ -29,22 +29,19 @@ make test-integration# the SQL adapter checked against the in-memory one, live
 make help            # every target
 ```
 
-## Layout
+## Architecture
 
-```
-apps/api                  Fastify transport and the composition root
-apps/web                  React UI, served by nginx in production
-packages/domain           filters, facets, money, and the repository port
-packages/application      use cases; talks to ports, never to adapters
-packages/infrastructure   CSV and Postgres adapters, config, migrations
-packages/contracts        the wire shape, shared by api and web
-```
+Three boundaries, each enforced rather than agreed. There is deliberately no directory
+map here: `ls` answers that better than a paragraph, and a written one is stale the first
+time anything moves.
 
-The arrows between those boxes are enforced by `no-restricted-imports` in
-`eslint.config.js` rather than by convention. The web app may import `@yaya/contracts` and
-nothing else, so a server internal cannot drift onto the wire by being convenient to
-import. The domain imports no workspace package at all. Application code depends on the
-port in `@yaya/domain`, never on an adapter. Crossing a layer fails the build.
+**Layers are a lint rule.** `no-restricted-imports` in `eslint.config.js` is the authority.
+The web app may import `@yaya/contracts` and nothing else, so a server internal cannot
+drift onto the wire just by being convenient to import. The domain imports no workspace
+package at all. Application code depends on the repository port, never on an adapter.
+Crossing a layer fails the build — and `architecture.test.ts` fails if one of those rules
+ever stops matching a real directory, which is how a boundary would otherwise disappear
+in silence.
 
 **The store is a choice, not a fact.** `FilterState` is a query specification rather than a
 predicate over an array, so the same filter is evaluated either by a pass over memory or

@@ -18,16 +18,17 @@ dropped silently, but one bad row can't blank the page.
   facet aggregation is the interesting query and it should stay legible.
 - npm workspaces. Nothing is shared by reaching across a directory.
 
-## Layout
+## Layering
 
-The map is in the [README](README.md#layout), because it is documentation for whoever
-reads the repo rather than an instruction to an agent.
+No directory map lives in prose — `ls` answers that, and a written one only goes stale.
+The layering is **enforced, not described**: `no-restricted-imports` in `eslint.config.js`
+is the authority, and `architecture.test.ts` fails if a rule stops matching a real
+directory.
 
-What matters here is that the layering is **enforced, not described**:
-`no-restricted-imports` in `eslint.config.js` is the authority. The web app may import
-`@yaya/contracts` only, the domain imports no workspace package at all, and application
-code may not reach for an adapter. An import that crosses a layer fails the build — so
-don't work around the rule, move the code.
+The rules say: the web app may import `@yaya/contracts` and nothing else, the domain
+imports no workspace package at all, and application code depends on the port rather than
+on an adapter. An import that crosses a layer fails the build — don't work around the
+rule, move the code.
 
 ## Commands
 
