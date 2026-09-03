@@ -1,0 +1,64 @@
+name: yaya-house
+
+# Startup is ordered by condition, not by sleep: postgres must be healthy before the
+# schema is applied, the schema must exist before the catalogue is loaded, and the API
+# only starts once there is something to serve.
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: yaya
+      POSTGRES_PASSWORD: yaya
+      POSTGRES_DB: yaya
+    ports: ['5432:5432']
+    volumes: ['postgres-data:/var/lib/postgresql/data']
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U yaya -d yaya']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  migrate:
+    build: { context: ., dockerfile: apps/api/Dockerfile }
+    command: ['node', 'packages/infrastructure/src/postgres/migrate.ts']
+    environment:
+      DATABASE_URL: postgres://yaya:yaya@postgres:5432/yaya
+      PROPERTY_SOURCE: postgres
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: 'no'
+
+  seed:
+    build: { context: ., dockerfile: apps/api/Dockerfile }
+    command: ['node', 'packages/infrastructure/src/csv/seed-postgres.ts']
+    environment:
+      DATABASE_URL: postgres://yaya:yaya@postgres:5432/yaya
+      PROPERTY_SOURCE: postgres
+      CSV_PATH: /app/data/sre-ai-coding-test-data.csv
+      MAX_REJECTED_RATIO: '0.2'
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    restart: 'no'
+
+  api:
+    build: { context: ., dockerfile: apps/api/Dockerfile }
+    environment:
+      NODE_ENV: production
+      PORT: '3000'
+      LOG_LEVEL: info
+      PROPERTY_SOURCE: postgres
+      DATABASE_URL: postgres://yaya:yaya@postgres:5432/yaya
+    ports: ['3000:3000']
+    depends_on:
+      seed: { condition: service_completed_successfully }
+    restart: unless-stopped
+
+  web:
+    build: { context: ., dockerfile: apps/web/Dockerfile }
+    ports: ['8080:8080']
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
+
+volumes:
+  postgres-data:

@@ -7,3 +7,5 @@ dist
 
 # vitest --coverage
 coverage
+
+.env
