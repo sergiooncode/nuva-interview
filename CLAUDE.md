@@ -14,24 +14,32 @@ dropped silently, but one bad row can't blank the page.
 - TypeScript, strict mode. Backend: Fastify. Frontend: Vite + React + Tailwind.
 - Validation: Zod. Schemas are the source of truth; derive types with `z.infer`,
   never hand-write a type alongside its schema.
-- Tests: Vitest.
-- One package, no workspaces. Domain code lives in `src/domain`.
+- Tests: Vitest. Store: PostgreSQL via `pg` and hand-written SQL — no ORM, because the
+  facet aggregation is the interesting query and it should stay legible.
+- npm workspaces. Nothing is shared by reaching across a directory.
 
 ## Layout
 
-```
-src/domain    pure filter + facet logic, CSV parsing, fixtures
-src/api       Fastify transport shell
-src/web       React UI
-```
+The map is in the [README](README.md#layout), because it is documentation for whoever
+reads the repo rather than an instruction to an agent.
+
+What matters here is that the layering is **enforced, not described**:
+`no-restricted-imports` in `eslint.config.js` is the authority. The web app may import
+`@yaya/contracts` only, the domain imports no workspace package at all, and application
+code may not reach for an adapter. An import that crosses a layer fails the build — so
+don't work around the rule, move the code.
 
 ## Commands
 
 ```
-npm run dev          both apps
-npm test             all tests
+npm run dev          both apps against the CSV
+npm test             all tests (the Postgres suite skips without TEST_DATABASE_URL)
 npm run typecheck    tsc --noEmit across workspaces
 npm run lint
+
+make ci              lint, typecheck, test and build — the same jobs a pipeline runs
+make up              postgres + migrate + seed + api + web, ordered by health
+make smoke           check the running stack answers on every endpoint that matters
 ```
 
 A `Stop` hook runs `typecheck && test` at the end of every turn, so a broken build

@@ -7,16 +7,52 @@ filtered server-side by bedrooms and price, rendered as a card grid.
 
 ## Running it
 
+Against the CSV, no database required:
+
 ```
 npm install
 npm run dev          # API on :3000, web on :5173 — open http://localhost:5173
 ```
 
+Or the whole stack in containers — Postgres, migrations, the CSV load, then the two
+services, each waiting on the previous one's health rather than on a sleep:
+
 ```
-npm test             # vitest, watch mode (npx vitest run for a single pass)
-npm run typecheck    # tsc --noEmit
-npm run lint         # eslint
+make up              # web on :8080, api on :3000
+make smoke           # health, ready, a search, and the web origin
+make down
 ```
+
+```
+make ci              # lint, typecheck, test, build — the same jobs a pipeline runs
+make test-integration# the SQL adapter checked against the in-memory one, live
+make help            # every target
+```
+
+## Layout
+
+```
+apps/api                  Fastify transport and the composition root
+apps/web                  React UI, served by nginx in production
+packages/domain           filters, facets, money, and the repository port
+packages/application      use cases; talks to ports, never to adapters
+packages/infrastructure   CSV and Postgres adapters, config, migrations
+packages/contracts        the wire shape, shared by api and web
+```
+
+The arrows between those boxes are enforced by `no-restricted-imports` in
+`eslint.config.js` rather than by convention. The web app may import `@yaya/contracts` and
+nothing else, so a server internal cannot drift onto the wire by being convenient to
+import. The domain imports no workspace package at all. Application code depends on the
+port in `@yaya/domain`, never on an adapter. Crossing a layer fails the build.
+
+**The store is a choice, not a fact.** `FilterState` is a query specification rather than a
+predicate over an array, so the same filter is evaluated either by a pass over memory or
+as SQL, behind one `PropertyRepository` port. Both adapters ship:
+`packages/infrastructure/src/search-equivalence.test.ts` puts eleven filter shapes through
+both and asserts identical results *and* identical facet counts, which is what keeps the
+in-memory implementation honest as the oracle for the SQL one rather than leaving it as
+dead code.
 
 ## Decisions
 
