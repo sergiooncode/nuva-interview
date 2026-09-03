@@ -1,46 +1,37 @@
+import type { PropertyRepository } from '@yaya/domain/repository.ts';
 import Fastify, { type FastifyInstance } from 'fastify';
-import { z } from 'zod';
-import type { Catalogue } from '@yaya/infrastructure/csv/parse-catalogue.ts';
-import { computeFacets } from '@yaya/domain/facets.ts';
-import { applyFilters } from '@yaya/domain/filters.ts';
-import { SearchQuerySchema, type SearchResponse } from '@yaya/contracts/search.ts';
+import { registerHealthRoutes } from './routes/health.ts';
+import { registerPropertyRoutes } from './routes/properties.ts';
 
-const offendingField = (error: z.ZodError): string => {
-  for (const issue of error.issues) {
-    if (issue.code === 'unrecognized_keys') return issue.keys.join(', ');
-    if (issue.path.length > 0) return issue.path.map(String).join('.');
-  }
-  return 'query';
+export type ServerOptions = {
+  repository: PropertyRepository;
+  logLevel?: string;
 };
 
-export const buildServer = (catalogue: Catalogue): FastifyInstance => {
-  const app = Fastify();
-
-  // The single place a failure becomes a status code; stack traces never leave here.
-  app.setErrorHandler((error, _request, reply) => {
-    app.log.error(error);
-    return reply.status(500).send({ error: 'Internal server error' });
+export const buildServer = ({ repository, logLevel }: ServerOptions): FastifyInstance => {
+  const app = Fastify({
+    logger: logLevel === undefined ? false : { level: logLevel },
+    // Trust the request id a proxy already assigned, so one trace spans the whole hop.
+    requestIdHeader: 'x-request-id',
   });
 
-  app.get('/api/properties', (request, reply) => {
-    const query = SearchQuerySchema.safeParse(request.query);
-    if (!query.success) {
-      return reply.status(400).send({
-        error: 'Invalid query parameter',
-        field: offendingField(query.error),
-      });
-    }
-
-    const filters = query.data;
-    const results = applyFilters(catalogue.properties, filters, { except: null });
-    const body: SearchResponse = {
-      results,
-      facets: computeFacets(catalogue.properties, filters),
-      total: results.length,
-      rejectedRows: catalogue.rejected.length,
-    };
-    return reply.send(body);
+  /**
+   * The single place a failure becomes a status code. The request id goes out with the
+   * body: a user reporting "it failed" hands over a string that finds the exact log line,
+   * which is the difference between a report being actionable and being a shrug. The
+   * stack stays on this side of the wire.
+   */
+  app.setErrorHandler((error, request, reply) => {
+    request.log.error({ err: error }, 'Unhandled error');
+    return reply.status(500).send({ error: 'Internal server error', requestId: request.id });
   });
+
+  app.setNotFoundHandler((request, reply) =>
+    reply.status(404).send({ error: 'Not found', requestId: request.id }),
+  );
+
+  registerHealthRoutes(app, repository);
+  registerPropertyRoutes(app, repository);
 
   return app;
 };

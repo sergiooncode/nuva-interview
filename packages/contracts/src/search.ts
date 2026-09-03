@@ -8,18 +8,35 @@ import {
 import { centsFromEuros } from '@yaya/domain/money.ts';
 import { PropertySchema } from '@yaya/domain/property.ts';
 
+/**
+ * Bounded on both axes. The client controls how many values it sends and how long each
+ * one is, and every value is compared against every row, so an unbounded list is an
+ * unbounded amount of work bought with one request.
+ */
 const commaSeparatedWholeNumbers = (field: string) =>
   z
     .string()
+    .max(200)
     .transform((raw) => raw.split(',').filter((part) => part !== ''))
-    .pipe(z.array(z.string().regex(/^\d+$/, `${field} must be whole numbers`)))
+    .pipe(
+      z
+        .array(z.string().regex(/^\d{1,3}$/, `${field} must be whole numbers`))
+        .max(50, `${field} accepts at most 50 values`),
+    )
     .transform((parts) => parts.map(Number));
 
-/** Prices travel the wire in whole euros, as api.md documents, and become cents here. */
+/**
+ * Prices travel the wire in whole euros and become cents here.
+ *
+ * The digit cap is load-bearing rather than cosmetic: an unbounded run of digits parses
+ * to `Infinity`, `centsFromEuros` throws a `DomainError`, and a throw inside a
+ * `.transform()` escapes `safeParse` instead of becoming an issue — which would answer a
+ * malformed query parameter with a 500 rather than a 400 naming the field.
+ */
 const wholeEuros = (field: string) =>
   z
     .string()
-    .regex(/^\d+$/, `${field} must be a whole number of euros`)
+    .regex(/^\d{1,7}$/, `${field} must be a whole number of euros`)
     .transform((raw) => centsFromEuros(Number(raw)));
 
 /**

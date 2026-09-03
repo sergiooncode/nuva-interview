@@ -1,12 +1,15 @@
-import { describe, expect, it } from 'vitest';
-import { FIXTURE_PROPERTIES } from '@yaya/domain/__fixtures__/properties.ts';
 import { SearchResponseSchema } from '@yaya/contracts/search.ts';
+import { FIXTURE_PROPERTIES } from '@yaya/domain/__fixtures__/properties.ts';
+import { createCsvPropertyRepository } from '@yaya/infrastructure/csv/csv-repository.ts';
+import { describe, expect, it } from 'vitest';
 import { buildServer } from './server.ts';
 
 const server = () =>
   buildServer({
-    properties: [...FIXTURE_PROPERTIES],
-    rejected: [{ row: 4, reason: 'bedrooms: must be a whole number' }],
+    repository: createCsvPropertyRepository({
+      properties: [...FIXTURE_PROPERTIES],
+      rejected: [{ row: 4, reason: 'bedrooms: must be a whole number' }],
+    }),
   });
 
 describe('GET /api/properties', () => {
